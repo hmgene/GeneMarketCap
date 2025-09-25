@@ -34,6 +34,5 @@ for article in root.findall(".//PubmedArticle"):
     abstract_texts = article.findall(".//AbstractText")
     abstract = " ".join([abs_text.text for abs_text in abstract_texts if abs_text.text]) if abstract_texts else "N/A"
     articles.append({"PMID": pmid, "Title": title, "Abstract": abstract})
-    print(f"PMID: {article['PMID']}\nTitle: {article['Title']}\nAbstract: {article['Abstract']}\n{'-'*40}")
-
+    #print(f"PMID: {article['PMID']}\nTitle: {article['Title']}\nAbstract: {article['Abstract']}\n{'-'*40}")
 
