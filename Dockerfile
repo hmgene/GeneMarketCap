@@ -8,3 +8,4 @@ COPY scripts/ ./scripts
 COPY data/ ./data
 ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "pubmed_env", "python", "scripts/dn.py"]
 
+
