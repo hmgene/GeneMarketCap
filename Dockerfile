@@ -1,15 +1,20 @@
-# Use lightweight web server
-FROM nginx:alpine
+# Use miniconda3 image as base
+FROM continuumio/miniconda3:latest
 
-# Copy your static files into the NGINX public directory
-COPY dist/ /usr/share/nginx/html
+# Set working directory
+WORKDIR /app
 
-# Optional: remove default config and copy your own (if needed)
-# COPY nginx.conf /etc/nginx/nginx.conf
+# Copy environment.yml and install dependencies
+COPY env.yml .
+RUN conda env create -f env.yml
 
-# Expose port (Render automatically uses PORT env var)
-EXPOSE 80
+# Activate the environment
+SHELL ["conda", "run", "-n", "pubmed_env", "/bin/bash", "-c"]
 
-# Start NGINX
-CMD ["nginx", "-g", "daemon off;"]
+# Copy scripts and data
+COPY scripts/ ./scripts
+COPY data/ ./data
+
+# Set the entrypoint to the Python script
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "pubmed_env", "python", "scripts/dn.py"]
 

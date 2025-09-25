@@ -34,50 +34,6 @@ for article in root.findall(".//PubmedArticle"):
     abstract_texts = article.findall(".//AbstractText")
     abstract = " ".join([abs_text.text for abs_text in abstract_texts if abs_text.text]) if abstract_texts else "N/A"
     articles.append({"PMID": pmid, "Title": title, "Abstract": abstract})
-
-for article in articles:
     print(f"PMID: {article['PMID']}\nTitle: {article['Title']}\nAbstract: {article['Abstract']}\n{'-'*40}")
 
-from Bio import Entrez
-
-# Set email for NCBI Entrez
-Entrez.email = "your_email@example.com"
-
-def fetch_pubmed_articles(query, max_results=10):
-    """Fetches PubMed articles for a given query and returns a list of dictionaries with PMID, Title, and Abstract."""
-    
-    # Search PubMed
-    handle = Entrez.esearch(db="pubmed", term=query, retmax=max_results)
-    record = Entrez.read(handle)
-    handle.close()
-
-    pmids = record["IdList"]  # List of PubMed IDs
-    return articles
-
-
-# Example usage
-query = "cancer AND gene expression"
-articles = fetch_pubmed_articles(query)
-
-print(f"Saved {len(articles)} articles to pubmed_articles.csv")
-
-
-
-
-
-
-import spacy
-handle = Entrez.efetch(db="pubmed", id=",".join(pmids), rettype="abstract", retmode="text")
-abstracts = handle.read()
-handle.close()
-
-# Load a biomedical NLP model (SciSpaCy)
-nlp = spacy.load("en_ner_bionlp13cg_md")  
-
-# Process the abstracts
-doc = nlp(abstracts)
-
-# Extract gene names
-genes = set(ent.text for ent in doc.ents if ent.label_ == "GENE_OR_GENE_PRODUCT")
-print("Extracted Genes:", genes)
 

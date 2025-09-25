@@ -1,0 +1,29 @@
+name: Update PubMed & Gene Data
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # daily 2 AM UTC
+  workflow_dispatch:
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Build Docker image
+      run: docker build -t pubmed-updater .
+
+    - name: Run Docker container
+      run: docker run --rm -v ${{ github.workspace }}/data:/app/data pubmed-updater
+
+    - name: Commit & push updates
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add data/
+        git commit -m "Incremental update of PubMed and gene names [skip ci]" || echo "No changes"
+        git push
+
