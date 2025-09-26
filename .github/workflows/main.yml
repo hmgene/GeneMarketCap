@@ -25,3 +25,5 @@ jobs:
         git add data/
         git commit -m "Incremental update of PubMed and gene names [skip ci]" || echo "No changes"
         git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
