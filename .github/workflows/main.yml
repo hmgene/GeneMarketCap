@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: '0 2 * * *'  # daily 2 AM UTC
   workflow_dispatch:
+
+permissions:
+  contents: write
+
 jobs:
   update-data:
     runs-on: ubuntu-latest
