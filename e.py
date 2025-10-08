@@ -11,7 +11,6 @@ def fetch_pubmed(term, max_records=100):
     record = Entrez.read(handle)
     ids = record["IdList"]
     handle.close()
-
     abstracts = []
     for pmid in ids:
         handle = Entrez.efetch(db="pubmed", id=pmid, retmode="xml")
@@ -24,7 +23,6 @@ def fetch_pubmed(term, max_records=100):
             abstracts.append({"pmid": pmid, "title": title, "abstract": abstract, "date": date})
         except KeyError:
             continue
-
     return pd.DataFrame(abstracts)
 
 if __name__ == "__main__":

@@ -5,6 +5,13 @@ Creating a CoinMarketCap-like app for gene names involves displaying information
 
 Data Source: Obtain gene data from a reliable source. This could be a public database like NCBI's Gene database or Ensembl. You'll need gene names, symbols, descriptions, and possibly other relevant information.
 
+
+## Install
+```
+docker build -f Dockerfile -t gmc .
+```
+
+
 Backend Development:
 
 Set up a backend server using a language/framework of your choice (e.g., Node.js with Express, Python with Flask/Django).
