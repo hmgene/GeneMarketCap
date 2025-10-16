@@ -6,6 +6,6 @@ RUN conda env create -f env.yml
 SHELL ["conda", "run", "-n", "pubmed_env", "/bin/bash", "-c"]
 COPY scripts/ ./scripts
 COPY data/ ./data
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "pubmed_env", "python", "scripts/dn.py"]
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "pubmed_env", "python", "/app/scripts/dn.py"]
 
 
