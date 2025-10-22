@@ -1,32 +1,21 @@
-import fitz  # PyMuPDF for extracting text
-import spacy
+from transformers import pipeline
 
-# Load the SciSpaCy biomedical NER model
-nlp = spacy.load("en_ner_bionlp13cg_md")
+def get_weather(city: str) -> str:
+    """Get weather for a given city."""
+    return f"It's always sunny in {city}!"
 
-# Step 1: Extract Text from PDF
-def extract_text_from_pdf(pdf_path):
-    """Extracts raw text from a PDF file."""
-    doc = fitz.open(pdf_path)
-    text = "\n".join(page.get_text() for page in doc)
-    return text
+# Local model (no API)
+model_name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+llm = pipeline("text-generation", model=model_name)
 
-# Step 2: Extract Gene Names Using SciSpaCy
-def extract_gene_names(text):
-    """Uses SciSpaCy's biomedical NER model to extract gene names."""
-    doc = nlp(text)
-    #genes = {ent.text for ent in doc.ents if ent.label_ in {"GENE_OR_GENE_PRODUCT"}}
-    genes = {ent.text for ent in doc.ents if ent.label_ in {"CELL"}}
-    return sorted(genes)
+def local_agent(prompt):
+    if "weather" in prompt.lower():
+        import re
+        m = re.search(r"in\s+([A-Za-z ]+)", prompt)
+        if m:
+            city = m.group(1).strip()
+            return get_weather(city)
+    return llm(prompt, max_new_tokens=100)[0]["generated_text"]
 
-if __name__ == "__main__":
-    pdf_path = "data/s41577-025-01129-6.pdf"  # Change to your actual file
-
-    # Extract text from PDF
-    text = extract_text_from_pdf(pdf_path)
-
-    # Extract gene names
-    genes = extract_gene_names(text)
-
-    print("Extracted Gene Names:", genes if genes else "No gene names found.")
+print(local_agent("what is the weather in San Francisco?"))
 
