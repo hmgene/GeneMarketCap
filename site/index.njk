@@ -1,0 +1,19 @@
+---
+layout: null
+title: Gene Mentions
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+</head>
+<body>
+  <h1>{{ title }}</h1>
+  <ul>
+    {% for gene, pid in g2p %}
+      <li>{{ gene }} : {{ pid | join(", ") }}</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
