@@ -32,7 +32,7 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PAT_TOKEN2 }}
           publish_dir: ./ # Folder to deploy
           publish_branch: gh-pages  # Deploy to gh-pages branch
           allow_empty_commit: true  # Deploy even if no changes
