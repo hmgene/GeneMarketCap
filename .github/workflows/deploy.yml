@@ -3,19 +3,19 @@ name: Build and Deploy 11ty Site
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main  # Trigger on push to main branch
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repo
+      # 1. Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Set up Node
-      - name: Setup Node.js
+      # 2. Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 20
@@ -24,13 +24,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 4. Build site
+      # 4. Build Eleventy site
       - name: Build Eleventy
-        run: npm run build
+        run: npx @11ty/eleventy --input=site --output=docs --quiet
 
-      # 5. Deploy to GitHub Pages
+      # 5. Deploy to gh-pages branch
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./ # Folder to deploy
+          publish_branch: gh-pages  # Deploy to gh-pages branch
+          allow_empty_commit: true  # Deploy even if no changes
