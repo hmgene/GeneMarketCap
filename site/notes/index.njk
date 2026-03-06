@@ -1,0 +1,7 @@
+<h1>Reading Notes</h1>
+
+<ul>
+{% for note in collections.notes %}
+<li><a href="{{ note.url }}">{{ note.fileSlug }}</a></li>
+{% endfor %}
+</ul>
