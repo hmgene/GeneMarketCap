@@ -1,8 +1,14 @@
 {
-  "name": "reading-knowledge",
+  "name": "minimal-11ty-gene",
   "version": "1.0.0",
+  "description": "Minimal Eleventy setup reading gene_mentions.json",
   "scripts": {
-    "start": "npx @11ty/eleventy --serve",
-    "build": "npx @11ty/eleventy"
-  }
+    "build": "eleventy --input=site --output=docs",
+    "start": "eleventy --input=site --output=docs --serve"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.2"
+  },
+  "author": "hyunmin",
+  "license": "MIT"
 }

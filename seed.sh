@@ -1,293 +1,67 @@
 #!/bin/bash
-# seed.sh — Bootstrap Eleventy research knowledge base
-
 set -e
 
-echo "Creating project structure..."
-
-mkdir -p \
-human \
-figures \
-ontology \
-scripts \
-site/_data \
-site/notes \
-site/gene \
-site/paper \
-site/graph \
-.github/workflows
-
-########################################
-# Example notes
-########################################
-
-cat <<'EOF' > human/2025-01_runx2.md
-# RUNX2 enhancer activation
-
-PMID: 38123456
-
-RUNX2 interacts with DNMT3A.
-
-Genes
-- RUNX2
-- DNMT3A
-- TET2
-
-![model](../figures/runx2_model.png)
-EOF
-
-cat <<'EOF' > human/2025-02_cnv_chipseq.md
-# CNV HICHIP Notes
-
-PMID: 37455321
-
-CNV affects regulatory regions.
-
-Genes
-- HIC1
-- RUNX2
-EOF
-
-touch figures/runx2_model.png
-
-########################################
-# Ontology seed
-########################################
-
-cat <<EOF > ontology/triples.tsv
-subject	predicate	object	source
-RUNX2	relates_to	HIC1	PMID37455321
-EOF
-
-########################################
-# Empty data placeholders
-########################################
-
-echo '{}' > site/_data/gene_mentions.json
-echo '{}' > site/_data/paper_mentions.json
-
-########################################
-# Notes index
-########################################
-
-cat <<'EOF' > site/notes/index.njk
-<h1>Reading Notes</h1>
-
-<ul>
-{% for note in collections.notes %}
-<li><a href="{{ note.url }}">{{ note.fileSlug }}</a></li>
-{% endfor %}
-</ul>
-EOF
-
-########################################
-# Graph placeholder
-########################################
-
-cat <<'EOF' > site/graph/index.njk
-<h1>Knowledge Graph</h1>
-<div id="graph"></div>
-<script src="/graph/graph.js"></script>
-EOF
-
-cat <<'EOF' > site/graph/graph.js
-console.log("Graph placeholder");
-EOF
-
-########################################
-# Placeholder scripts
-########################################
-
-touch scripts/extract_pmid.py
-touch scripts/build_graph.py
-
-########################################
-# Eleventy configuration
-########################################
-
-cat <<'EOF' > .eleventy.js
-const fs = require("fs");
-
-module.exports = function(eleventyConfig) {
-
-  eleventyConfig.addPassthroughCopy("figures");
-
-  eleventyConfig.addCollection("notes", function(collectionApi) {
-    return collectionApi.getFilteredByGlob("human/*.md");
-  });
-
-  function extractMentions() {
-
-    const geneMentions = {};
-    const paperMentions = {};
-
-    if (!fs.existsSync("human")) return;
-
-    const notes = fs.readdirSync("human").filter(f => f.endsWith(".md"));
-
-    for (const note of notes) {
-
-      const text = fs.readFileSync("human/" + note, "utf8");
-
-      const pmids = [...text.matchAll(/PMID:\s*([0-9]+)/g)]
-        .map(m => m[1]);
-
-      const genes = [...new Set(
-        [...text.matchAll(/\b[A-Z][A-Z0-9]{2,9}\b/g)]
-        .map(m => m[0])
-      )].filter(g => !["PMID","CNV","DNA","RNA"].includes(g));
-
-      for (const g of genes) {
-
-        if (!geneMentions[g]) geneMentions[g] = [];
-
-        geneMentions[g].push(note);
-
-        geneMentions[g] = [...new Set(geneMentions[g])];
-
-      }
-
-      for (const p of pmids) {
-
-        if (!paperMentions[p]) paperMentions[p] = [];
-
-        paperMentions[p].push(note);
-
-        paperMentions[p] = [...new Set(paperMentions[p])];
-
-      }
-
-    }
-
-    fs.writeFileSync(
-      "site/_data/gene_mentions.json",
-      JSON.stringify(geneMentions,null,2)
-    );
-
-    fs.writeFileSync(
-      "site/_data/paper_mentions.json",
-      JSON.stringify(paperMentions,null,2)
-    );
-
-  }
-
-  extractMentions();
-
-  return {
-    dir: {
-      input: "site",
-      output: "docs"
-    }
-  };
-
-};
-EOF
-
-########################################
-# Gene template
-########################################
-
-cat <<'EOF' > site/gene/gene.njk
----
-pagination:
-  data: gene_mentions
-  size: 1
-  alias: gene
-permalink: "{% if gene.key %}/gene/{{ gene.key | slug }}/{% else %}false{% endif %}"
----
-
-<h1>{{ gene.key }}</h1>
-
-<h2>Appears in notes</h2>
-
-<ul>
-{% for note in gene.value %}
-<li>
-<a href="/notes/{{ note | slug }}/">{{ note }}</a>
-</li>
-{% endfor %}
-</ul>
-EOF
-
-########################################
-# Paper template
-########################################
-
-cat <<'EOF' > site/paper/paper.njk
----
-pagination:
-  data: paper_mentions
-  size: 1
-  alias: paper
-permalink: "{% if paper.key %}/paper/{{ paper.key }}/{% else %}false{% endif %}"
----
-
-<h1>PMID {{ paper.key }}</h1>
-
-<h2>Appears in notes</h2>
-
-<ul>
-{% for note in paper.value %}
-<li>
-<a href="/notes/{{ note | slug }}/">{{ note }}</a>
-</li>
-{% endfor %}
-</ul>
-EOF
-
-########################################
-# package.json
-########################################
-
-cat <<'EOF' > package.json
+# 1. Create package.json if missing
+if [ ! -f package.json ]; then
+  echo "Creating minimal package.json..."
+  cat > package.json << 'EOF'
 {
-  "name": "reading-knowledge",
+  "name": "minimal-11ty-gene",
   "version": "1.0.0",
+  "description": "Minimal Eleventy setup reading gene_mentions.json",
   "scripts": {
-    "start": "npx @11ty/eleventy --serve",
-    "build": "npx @11ty/eleventy"
-  }
+    "build": "eleventy --input=site --output=docs",
+    "start": "eleventy --input=site --output=docs --serve"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.2"
+  },
+  "author": "hyunmin",
+  "license": "MIT"
+}
+EOF
+fi
+
+# 2. Install Eleventy locally
+npm install
+
+# 3. Create folder structure
+mkdir -p site/_data docs
+
+# 4. Create example gene_mentions.json
+cat > site/_data/gene_mentions.json << 'EOF'
+{
+  "BRCA1": ["paper1.md", "paper2.md"],
+  "TP53": ["paper3.md", "paper4.md"],
+  "MYC": ["paper5.md"]
 }
 EOF
 
-########################################
-# GitHub Actions
-########################################
-
-cat <<'EOF' > .github/workflows/build-deploy.yml
-name: Build and Deploy
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - run: npm install
-
-      - run: npm run build
-
-      - uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+# 5. Create minimal index.njk template
+cat > site/index.njk << 'EOF'
+---
+layout: null
+title: Gene Mentions
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+</head>
+<body>
+  <h1>{{ title }}</h1>
+  <ul>
+    {% for gene, mentions in gene_mentions %}
+      <li>{{ gene }} : {{ mentions | join(", ") }}</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
 EOF
 
-echo ""
-echo "Bootstrap complete."
-echo ""
-echo "Next steps:"
-echo "npm install"
-echo "npm run start"
+# 6. Build Eleventy
+#npx eleventy --input=site --output=docs --quiet
+
+echo "✅ Eleventy build complete. Open docs/index.html"
+echo "Run 'npm start' to serve locally"
