@@ -1,15 +1,4 @@
 {
-  "gene1": [
-    "pmid1",
-    "pmid2"
-  ],
-  "geen2": [
-    "pmid1",
-    "pmid3"
-  ],
-  "gene3": [
-    "pmid4"
-  ],
   "TMPRSS2-ERG": [
     "PMC5094965"
   ],

@@ -49,7 +49,7 @@ async function processPMCFile(file) {
 
 (async () => {
   for (const f of files) {
-    await processPMCFile(path.join("papers/",f));
+    await processPMCFile(path.join("papers",f));
   }
   fs.writeFileSync(g2pPath, JSON.stringify(g2p, null, 2));
 })();
