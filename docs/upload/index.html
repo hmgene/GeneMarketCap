@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload PMC</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>GeneMarketCap</h1>
+  </header>
+
+  <main>
+    
+<form action="/process-pmc" method="POST">
+  <label>PMC URL or ID:
+    <input type="text" name="pmcId" placeholder="PMC5094965" />
+  </label>
+  <label>Genes (comma-separated):
+    <input type="text" name="genes" placeholder="TMPRSS2-ERG, PTEN" />
+  </label>
+  <button type="submit">Submit</button>
+</form>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 GeneMarketCap</p>
+  </footer>
+</body>
+</html>

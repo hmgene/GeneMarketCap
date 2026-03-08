@@ -1,0 +1,54 @@
+const fs = require("fs");
+const fetch = require("node-fetch");
+
+// 1. 입력 PMC URL
+const pmcUrl = "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5094965/";
+
+// 2. PMC ID 추출
+const pmcIdMatch = pmcUrl.match(/PMC(\d+)/i);
+if (!pmcIdMatch) {
+  console.error("Invalid PMC URL");
+  process.exit(1);
+}
+const pmcId = pmcIdMatch[0];
+console.log(pmcId)
+
+// 3. PMC API 호출
+const apiUrl = `https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:PMC${pmcId}&format=json`;
+
+async function processPMC() {
+  const res = await fetch(apiUrl);
+  const data = await res.json();
+
+  if (!data.resultList?.result?.length) {
+    console.error("PMC article not found");
+    return;
+  }
+
+  const article = data.resultList.result[0];
+  const title = article.title;
+  const abstract = article.abstractText;
+
+  console.log(`Title: ${title}`);
+  console.log(`Abstract: ${abstract}`);
+
+  // 4. Gene 추출 (간단 예시, 실제로는 gene list 확장 가능)
+  const geneRegex = /\b(TMPRSS2-ERG|PTEN|NOTCH1)\b/g;
+  const genes = [...new Set([...title.matchAll(geneRegex), ...abstract.matchAll(geneRegex)].map(m => m[0]))];
+
+  console.log("Genes:", genes);
+
+  // 5. g2p.json 업데이트
+  const g2pPath = "./site/_data/g2p.json";
+  const g2p = fs.existsSync(g2pPath) ? JSON.parse(fs.readFileSync(g2pPath)) : {};
+
+  genes.forEach(g => {
+    if (!g2p[g]) g2p[g] = [];
+    if (!g2p[g].includes(pmcId)) g2p[g].push(pmcId);
+  });
+
+  fs.writeFileSync(g2pPath, JSON.stringify(g2p, null, 2));
+  console.log("g2p.json updated!");
+}
+
+processPMC().catch(console.error);

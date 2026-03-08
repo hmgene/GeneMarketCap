@@ -1,0 +1,14 @@
+---
+layout: base.njk
+title: Upload PMC
+---
+
+<form action="/process-pmc" method="POST">
+  <label>PMC URL or ID:
+    <input type="text" name="pmcId" placeholder="PMC5094965" />
+  </label>
+  <label>Genes (comma-separated):
+    <input type="text" name="genes" placeholder="TMPRSS2-ERG, PTEN" />
+  </label>
+  <button type="submit">Submit</button>
+</form>

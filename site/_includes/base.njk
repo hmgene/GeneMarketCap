@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% if title %}{{ title }}{% else %}GeneMarketCap{% endif %}</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>GeneMarketCap</h1>
+  </header>
+
+  <main>
+    {{ content | safe }}
+  </main>
+
+  <footer>
+    <p>&copy; 2026 GeneMarketCap</p>
+  </footer>
+</body>
+</html>
