@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    {"id":"ROS","label":"Molecule","name":"Reactive Oxygen Species"},
+    {"id":"DNA_damage","label":"Process","name":"DNA damage"},
+    {"id":"Cancer","label":"Disease","name":"Cancer"}
+  ],
+  "edges": [
+    {"source":"ROS","target":"DNA_damage","type":"CAUSES"},
+    {"source":"DNA_damage","target":"Cancer","type":"CONTRIBUTES_TO"}
+  ]
+}

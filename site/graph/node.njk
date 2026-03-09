@@ -1,0 +1,21 @@
+---
+pagination:
+  data: graph.nodes
+  size: 1
+  alias: node
+permalink: "graph/node/{{ node.id }}/index.html"
+---
+
+<h1>{{ node.name }}</h1>
+
+<p>Type: {{ node.type }}</p>
+
+<h2>Relationships</h2>
+
+<ul>
+{% for e in adjacency[node.id] %}
+<li>
+{{ e.type }} → {{ e.target }}
+</li>
+{% endfor %}
+</ul>
