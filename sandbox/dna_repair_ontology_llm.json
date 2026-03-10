@@ -1,0 +1,101 @@
+{
+    "DNA_Damage_and_Repair": {
+        "description": "Cells are constantly exposed to endogenous and environmental factors that can damage DNA. These insults can cause strand breaks, base modifications, crosslinks, or mutations. To maintain genomic stability, cells activate specialized DNA repair pathways depending on the type of damage.",
+        "reference": {
+            "authors": [
+                "Moon",
+                "J. Kitty",
+                "I. Renata",
+                "K. Qin",
+                "S. Zhao",
+                "F. Kim",
+                "W"
+            ],
+            "title": "DNA Damage and Its Role in Cancer Therapeutics",
+            "journal_info": "Int"
+        },
+        "pathways": [
+            {
+                "name": "Base Excision Repair",
+                "damage_types": [
+                    "single-strand breaks",
+                    "strand breaks"
+                ],
+                "description": "Single-strand breaks (SSBs) are primarily repaired through the Base Excision Repair (BER) pathway. Proteins such as PARP1 detect the damage, and enzymes like APE1, XRCC1, and DNA polymerase \u03b2 restore the correct DNA sequence.",
+                "key_genes": [
+                    "-",
+                    "BER",
+                    "PARP1",
+                    "APE1",
+                    "XRCC1",
+                    "DNA",
+                    "\u03b2",
+                    "DNA"
+                ]
+            },
+            {
+                "name": "These lesions are repaired either by Non-Homologous End Joining",
+                "damage_types": [
+                    "double-strand breaks",
+                    "strand breaks"
+                ],
+                "description": "More severe damage occurs with double-strand breaks (DSBs). These lesions are repaired either by Non-Homologous End Joining (NHEJ), a rapid but error-prone pathway, or by Homologous Recombination (HR), a high-fidelity repair mechanism that uses a homologous DNA template.",
+                "key_genes": [
+                    "-",
+                    "-",
+                    "NHEJ",
+                    "-",
+                    "HR",
+                    "-",
+                    "DNA"
+                ]
+            },
+            {
+                "name": "Homologous Recombination",
+                "damage_types": [
+                    "double-strand breaks",
+                    "strand breaks"
+                ],
+                "description": "More severe damage occurs with double-strand breaks (DSBs). These lesions are repaired either by Non-Homologous End Joining (NHEJ), a rapid but error-prone pathway, or by Homologous Recombination (HR), a high-fidelity repair mechanism that uses a homologous DNA template.",
+                "key_genes": [
+                    "-",
+                    "-",
+                    "NHEJ",
+                    "-",
+                    "HR",
+                    "-",
+                    "DNA"
+                ]
+            },
+            {
+                "name": "Nucleotide Excision Repair",
+                "damage_types": [
+                    "crosslinks",
+                    "oxidized bases",
+                    "bulky adducts"
+                ],
+                "description": "DNA lesions such as bulky adducts, crosslinks, and oxidized bases are corrected through Nucleotide Excision Repair (NER). This pathway removes the damaged DNA segment and replaces it with newly synthesized DNA.",
+                "key_genes": [
+                    "DNA",
+                    "NER",
+                    "DNA",
+                    "DNA"
+                ]
+            },
+            {
+                "name": "Mismatch Repair",
+                "damage_types": [
+                    "replication errors",
+                    "mismatches",
+                    "insertions",
+                    "deletions"
+                ],
+                "description": "Finally, Mismatch Repair (MMR) corrects replication errors such as base mismatches or small insertions and deletions, ensuring high fidelity during DNA replication.",
+                "key_genes": [
+                    "MMR",
+                    "DNA"
+                ]
+            }
+        ]
+    }
+}
