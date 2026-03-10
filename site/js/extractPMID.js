@@ -128,6 +128,41 @@ async function fetchAbstractFromPubMed(pmid, pmcid) {
   }
 }
 
+// lightweight LLM helper: extract gene/TF names from text using an OpenAI model
+async function extractGenesFromText(text) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY environment variable is required');
+  }
+
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a concise assistant that reads biomedical text and returns only a JSON array of gene or transcription factor symbols mentioned therein.'
+        },
+        { role: 'user', content: text }
+      ],
+      temperature: 0.0
+    })
+  });
+
+  const data = await response.json();
+  let result = data.choices?.[0]?.message?.content?.trim() || '';
+  try {
+    return JSON.parse(result);
+  } catch (_err) {
+    return result.split(/[\s,]+/).filter(Boolean);
+  }
+}
+
 // Main
 async function main() {
   const rawPapers = extractPMIDsFromPapers();
@@ -143,6 +178,14 @@ async function main() {
     const { title, abstract } = await fetchAbstractFromPubMed(paper.pmid, paper.pmcid);
     paper.title = title;
     paper.abstract = abstract;
+
+    // use light LLM to extract gene names from title+abstract
+    try {
+      paper.genes = await extractGenesFromText(`${title}\n\n${abstract}`);
+    } catch (err) {
+      console.error('  gene extraction error:', err.message);
+      paper.genes = [];
+    }
 
     // Small delay to avoid overwhelming the API
     await new Promise(resolve => setTimeout(resolve, 500));
