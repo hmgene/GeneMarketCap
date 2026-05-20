@@ -1,31 +1,9 @@
-from fastapi import FastAPI, UploadFile, File
-import os
+from fastapi import FastAPI
 
-from app.ingest import ingest_pdf
-from app.rag import ask_question
+from app.api.routes.upload import router as upload_router
+from app.api.routes.ask import router as ask_router
 
 app = FastAPI()
 
-
-@app.post("/upload")
-async def upload(file: UploadFile = File(...)):
-
-    os.makedirs("./data/pdfs", exist_ok=True)
-
-    path = f"./data/pdfs/{file.filename}"
-
-    with open(path, "wb") as f:
-        f.write(await file.read())
-
-    result = ingest_pdf(path)
-
-    return result
-
-
-@app.post("/ask")
-async def ask(payload: dict):
-
-    return ask_question(
-        payload["question"],
-        payload.get("paper_id")
-    )
+app.include_router(upload_router)
+app.include_router(ask_router)

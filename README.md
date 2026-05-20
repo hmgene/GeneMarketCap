@@ -2,26 +2,6 @@
 
 Local-first scientific research assistant.
 
-## Structure 
-```
-data/
-├── chroma/
-├── obsidian/
-├── pdfs/
-└── meta/
-    └── papers.csv   ← single source of truth
-
-app/
-├── main.py             (FastAPI)
-├── ingest.py           (PDF upload pipeline)
-├── rag.py              (ASK pipeline)
-├── csv_store.py        (papers.csv manager)
-├── embeddings.py
-├── chroma_store.py
-├── gene_extractor.py
-└── config.py
-```
-
 ---
 
 # Setup

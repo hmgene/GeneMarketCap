@@ -1,13 +1,18 @@
 import chromadb
-from app.config import CHROMA_DIR
+
+from app.core.config import CHROMA_DIR
 
 client = chromadb.PersistentClient(path=CHROMA_DIR)
+
 collection = client.get_or_create_collection("papers")
 
 
-def add_chunks(chunks, embeddings, metadatas, batch_size=100):
-
-    assert len(chunks) == len(embeddings)
+def add_chunks(
+    chunks,
+    embeddings,
+    metadatas,
+    batch_size=100
+):
 
     for start in range(0, len(chunks), batch_size):
 
@@ -17,8 +22,9 @@ def add_chunks(chunks, embeddings, metadatas, batch_size=100):
         batch_embeddings = embeddings[start:end]
 
         batch_ids = [
-            f"chunk_{start + i}"
-            for i in range(len(batch_chunks))
+            f"{metadatas['paper_id']}_{i}"
+            for i in range(start, end)
+            if i < len(chunks)
         ]
 
         batch_metadatas = [
@@ -33,9 +39,23 @@ def add_chunks(chunks, embeddings, metadatas, batch_size=100):
         )
 
 
-def query_chunks(query_embedding, k=5):
+def query_chunks(
+    query_embedding,
+    pubmed_id=None,
+    n_results=5
+):
+
+    if pubmed_id:
+
+        return collection.query(
+            query_embeddings=[query_embedding],
+            n_results=n_results,
+            where={
+                "pubmed_id": str(pubmed_id)
+            }
+        )
 
     return collection.query(
         query_embeddings=[query_embedding],
-        n_results=k
+        n_results=n_results
     )

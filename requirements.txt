@@ -1,10 +1,6 @@
-pandas
 fastapi
 uvicorn
 python-multipart
-
-pymupdf
-chromadb
 ollama
-
-langchain-text-splitters
+chromadb
+pymupdf
