@@ -2,10 +2,12 @@ import ollama
 
 from app.embeddings import get_embedding
 from app.chroma_store import query_chunks
+from app.csv_store import update_genes
+from app.gene_extractor import extract_genes
 from app.config import LLM_MODEL
 
 
-def ask_question(question: str):
+def ask_question(question, paper_id=None):
 
     query_embedding = get_embedding(question)
 
@@ -18,7 +20,10 @@ def ask_question(question: str):
     prompt = f"""
 You are a scientific research assistant.
 
-Answer the question using ONLY the provided context.
+Extract:
+- genes
+- pathways
+- mechanism
 
 Context:
 {context}
@@ -27,14 +32,19 @@ Question:
 {question}
 """
 
-    response = ollama.chat(
+    res = ollama.chat(
         model=LLM_MODEL,
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
+        messages=[{"role": "user", "content": prompt}]
     )
 
-    return response["message"]["content"]
+    answer = res["message"]["content"]
+
+    genes = extract_genes(context)
+
+    if paper_id:
+        update_genes(paper_id, genes)
+
+    return {
+        "answer": answer,
+        "genes": genes
+    }

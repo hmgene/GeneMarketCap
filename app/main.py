@@ -1,49 +1,31 @@
-import os
-import shutil
-
 from fastapi import FastAPI, UploadFile, File
-from pydantic import BaseModel
+import os
 
 from app.ingest import ingest_pdf
 from app.rag import ask_question
 
-from app.config import PDF_PATH
-
-
 app = FastAPI()
 
 
-class QuestionRequest(BaseModel):
-    question: str
+@app.post("/upload")
+async def upload(file: UploadFile = File(...)):
 
+    os.makedirs("./data/pdfs", exist_ok=True)
 
-@app.get("/")
-async def root():
+    path = f"./data/pdfs/{file.filename}"
 
-    return {
-        "message": "Research Agent API running"
-    }
+    with open(path, "wb") as f:
+        f.write(await file.read())
 
-
-@app.post("/upload_pdf")
-async def upload_pdf(file: UploadFile = File(...)):
-
-    save_path = os.path.join(PDF_PATH, file.filename)
-
-    with open(save_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-
-    result = ingest_pdf(save_path)
+    result = ingest_pdf(path)
 
     return result
 
 
 @app.post("/ask")
-async def ask(req: QuestionRequest):
+async def ask(payload: dict):
 
-    answer = ask_question(req.question)
-
-    return {
-        "question": req.question,
-        "answer": answer
-    }
+    return ask_question(
+        payload["question"],
+        payload.get("paper_id")
+    )

@@ -1,8 +1,9 @@
-CHROMA_PATH = "./data/chroma"
-PDF_PATH = "./data/pdfs"
-OBSIDIAN_PATH = "./data/obsidian"
 
-EMBED_MODEL = "nomic-embed-text"
 LLM_MODEL = "qwen3:14b"
+EMBED_MODEL = "nomic-embed-text"
 
-COLLECTION_NAME = "papers"
+DATA_DIR = "./data"
+PDF_DIR = "./data/pdfs"
+META_DIR = "./data/meta"
+CSV_PATH = "./data/meta/papers.csv"
+CHROMA_DIR = "./data/chroma"
