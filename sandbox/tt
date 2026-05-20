@@ -1,0 +1,10 @@
+from transformers import pipeline
+
+ner = pipeline(
+    "token-classification",
+    model="OpenMed/OpenMed-NER-GenomeDetect-BioMed-109M",
+    aggregation_strategy="simple"
+)
+
+text = "Mutations in BRCA1 and TP53 increase cancer risk."
+print(ner(text))

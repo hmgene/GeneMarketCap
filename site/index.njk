@@ -15,5 +15,25 @@ title: Gene Mentions
       <li>{{ gene }} : {{ pid | join(", ") }}</li>
     {% endfor %}
   </ul>
+
+
+<h1>Knowledge Graph</h1>
+<p>{{ graph | dump }}</p>
+
+<h1>Knowledge Graph Test</h1>
+<ul>
+{% for n in graph.nodes %}
+  <li>{{ n.name }} ({{ n.label }})</li>
+{% endfor %}
+</ul>
+
+<ul>
+{% for n in graph.nodes %}
+<li>
+<a href="/graph/node/{{n.name}}">{{n.name}}</a>
+</li>
+{% endfor %}
+</ul>
+
 </body>
 </html>
