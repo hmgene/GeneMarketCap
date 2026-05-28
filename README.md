@@ -60,4 +60,7 @@ curl -X POST \
   http://127.0.0.1:8000/ask \
   -H "Content-Type: application/json" \
   -d '{"question":"What genes are important?"}'
+  
 ```
+## Sites
+- gui : https://github.com/open-webui/open-webui
