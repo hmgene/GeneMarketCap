@@ -3,4 +3,4 @@
 | 40055311 | Tissue macrophages: origin, heterogenity, biological functions, diseases and therapeutic targets | RUNX1, TNFA, TGFB | macropage, repir, protenitor, stem cell https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41392-025-02124-y/MediaObjects/41392_2025_2124_Fig2_HTML.png?as=webp |
 | 42092049 | Comparative insights into the apoptosome, inflammasomes and PIDDosome | |<img width="2164" height="974" alt="image" src="https://github.com/user-attachments/assets/4074e8ea-9b36-42de-88ad-73149f506f70" /> |
 | 42139055 | TP53-based tripartite classification reveals three distinct mutation patterns across pan-cancer | TP53,EGFR,BRAF,PIK3CA,KRAS,TERT,MYC | |
-| 42139058 | Ki-67 promotes circulating tumor cell intravasation and metastasis in breast cancer | MKI67,CD47,KLF4 | |
+| 42139058 | Ki-67 promotes circulating tumor cell intravasation and metastasis in breast cancer | MKI67,CD47,KLF4 | circular tumore cell (CTC) |
